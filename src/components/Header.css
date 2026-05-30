@@ -158,6 +158,22 @@
   color: var(--text-primary);
 }
 
+.pwa-install-btn {
+  color: var(--accent-2);
+  animation: pwaPulse 2.5s ease-in-out infinite;
+}
+
+.pwa-install-btn:hover {
+  background: rgba(124, 58, 237, 0.12);
+  border-color: rgba(124, 58, 237, 0.25);
+  color: var(--accent-2);
+}
+
+@keyframes pwaPulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
 .ha-cart-badge {
   position: absolute;
   top: -3px;

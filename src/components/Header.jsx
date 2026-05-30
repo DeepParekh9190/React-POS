@@ -2,6 +2,7 @@ import AdminPanel from "./AdminPanel";
 import Dashboard from "./Dashboard";
 import Settings from "./Settings";
 import EmployeeLogin from "./EmployeeLogin";
+import PwaInstall from "./PwaInstall";
 import { useEmployees } from "../context/EmployeeContext";
 import { useSettings } from "../context/SettingsContext";
 import "./Header.css";
@@ -73,6 +74,7 @@ export default function Header({
               />
             </div>
             <div className="header-actions">
+              <PwaInstall />
               <button className="ha-btn ha-cart" title="Cart">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
