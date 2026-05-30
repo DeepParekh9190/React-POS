@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["vite.svg", "icon-192.svg", "icon-512.svg"],
       manifest: {
-        name: "Random POS",
-        short_name: "Random POS",
+        name: "Pulse",
+        short_name: "Pulse",
         description: "Point of Sale System",
         theme_color: "#0b1121",
         background_color: "#0b1121",

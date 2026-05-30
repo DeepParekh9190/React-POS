@@ -4,7 +4,7 @@ const SettingsContext = createContext(null);
 const STORAGE_KEY = "novapos_settings";
 
 const defaults = {
-  storeName: "Random POS",
+  storeName: "Pulse",
   taxRate: 10,
   gstin: "",
   sgst: 5,
