@@ -41,6 +41,10 @@ function AppContent() {
     addItem(product);
   };
 
+  const adminOnly = (fn) => () => {
+    if (currentEmployee?.role === "admin") fn();
+  };
+
   return (
     <div className="app">
       <Header
@@ -49,13 +53,13 @@ function AppContent() {
         category={category}
         onCategoryChange={setCategory}
         itemCount={itemCount}
-        onAdminClick={() => setShowAdmin(true)}
+        onAdminClick={adminOnly(() => setShowAdmin(true))}
         showAdmin={showAdmin}
         onCloseAdmin={() => setShowAdmin(false)}
-        onDashboardClick={() => setShowDashboard(true)}
+        onDashboardClick={adminOnly(() => setShowDashboard(true))}
         showDashboard={showDashboard}
         onCloseDashboard={() => setShowDashboard(false)}
-        onSettingsClick={() => setShowSettings(true)}
+        onSettingsClick={adminOnly(() => setShowSettings(true))}
         showSettings={showSettings}
         onCloseSettings={() => setShowSettings(false)}
         onEmployeeClick={() => setShowEmployee(true)}

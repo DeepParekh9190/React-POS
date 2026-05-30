@@ -9,6 +9,7 @@ export default function EmployeeLogin({ onClose, required }) {
   const [showManage, setShowManage] = useState(false);
   const [newName, setNewName] = useState("");
   const [newPin, setNewPin] = useState("");
+  const [newRole, setNewRole] = useState("staff");
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -24,9 +25,10 @@ export default function EmployeeLogin({ onClose, required }) {
 
   const handleAdd = () => {
     if (!newName.trim() || newPin.length < 3) return;
-    addEmployee({ name: newName.trim(), pin: newPin, role: "staff" });
+    addEmployee({ name: newName.trim(), pin: newPin, role: newRole });
     setNewName("");
     setNewPin("");
+    setNewRole("staff");
   };
 
   const handleLogout = () => {
@@ -69,15 +71,21 @@ export default function EmployeeLogin({ onClose, required }) {
             <span className="emp-role">{currentEmployee.role}</span>
             <button className="emp-btn emp-btn-logout" onClick={handleLogout}>Logout</button>
 
-            <button className="emp-btn emp-btn-manage" onClick={() => setShowManage(!showManage)}>
-              {showManage ? "Hide" : "Manage Staff"}
-            </button>
+            {currentEmployee.role === "admin" && (
+              <button className="emp-btn emp-btn-manage" onClick={() => setShowManage(!showManage)}>
+                {showManage ? "Hide" : "Manage Staff"}
+              </button>
+            )}
 
-            {showManage && (
+            {showManage && currentEmployee.role === "admin" && (
               <div className="emp-manage">
                 <div className="emp-add-row">
                   <input className="emp-input" placeholder="Name" value={newName} onChange={(e) => setNewName(e.target.value)} />
                   <input className="emp-input emp-input-sm" type="password" placeholder="PIN" value={newPin} onChange={(e) => setNewPin(e.target.value)} maxLength={6} />
+                  <select className="emp-role-select" value={newRole} onChange={(e) => setNewRole(e.target.value)}>
+                    <option value="staff">Staff</option>
+                    <option value="admin">Admin</option>
+                  </select>
                   <button className="emp-btn emp-btn-add" onClick={handleAdd}>Add</button>
                 </div>
                 <div className="emp-list">
