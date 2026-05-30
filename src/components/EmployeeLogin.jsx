@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useEmployees } from "../context/EmployeeContext";
-import { isBiometricAvailable, registerBiometric } from "../utils/biometric";
+import { isBiometricAvailable, registerBiometric, verifyBiometric } from "../utils/biometric";
 import "./EmployeeLogin.css";
 
 export default function EmployeeLogin({ onClose, required }) {
@@ -13,6 +13,7 @@ export default function EmployeeLogin({ onClose, required }) {
   const [newRole, setNewRole] = useState("staff");
   const [bioAvailable, setBioAvailable] = useState(false);
   const [bioLoading, setBioLoading] = useState(false);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     isBiometricAvailable().then(setBioAvailable);
@@ -20,13 +21,18 @@ export default function EmployeeLogin({ onClose, required }) {
 
   const handleLogin = (e) => {
     e.preventDefault();
+    handlePinLogin();
+  };
+
+  const handlePinLogin = () => {
     setError("");
     const emp = login(pin);
-    if (emp) {
+    if (emp && emp.role === role) {
       setPin("");
-      onClose();
+      if (onClose) onClose();
     } else {
       setError("Invalid PIN");
+      setPin("");
     }
   };
 
@@ -47,21 +53,21 @@ export default function EmployeeLogin({ onClose, required }) {
     if (pin.length === 4) {
       setError("");
       const emp = login(pin);
-      if (emp) {
+      if (emp && emp.role === role) {
         setPin("");
         if (onClose) onClose();
       } else {
         setError("Invalid PIN");
-        setPin(""); // Clear so they can try again
+        setPin("");
       }
     }
-  }, [pin, login, onClose]);
+  }, [pin, login, onClose, role]);
 
   return (
     <div className={`emp-overlay ${required ? "emp-overlay-required" : ""}`} onClick={(e) => { if (required) return; if (e.target === e.currentTarget) onClose(); }}>
       <div className="emp-panel">
         <div className="emp-header">
-          <h2 className="emp-title">{currentEmployee ? "Staff" : "Staff Login"}</h2>
+          <h2 className="emp-title">{currentEmployee ? "Staff" : role ? `${role.charAt(0).toUpperCase() + role.slice(1)} Login` : "Staff Login"}</h2>
           {required ? null : (
             <button className="emp-close" onClick={onClose}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -134,14 +140,56 @@ export default function EmployeeLogin({ onClose, required }) {
               </div>
             )}
           </div>
-        ) : (
+        ) : role ? (
           <form onSubmit={handleLogin}>
+            <button type="button" className="emp-back-btn" onClick={() => { setRole(null); setPin(""); setError(""); }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              Back
+            </button>
+            <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", textAlign: "center", marginBottom: 16, textTransform: "capitalize" }}>{role} Login</div>
+
+            {role === "admin" && (() => {
+              const admin = employees.find(e => e.role === "admin" && e.fingerprintEnabled && e.credentialId);
+              if (!bioAvailable || !admin) return null;
+              return (
+                <button type="button" className="emp-btn emp-btn-fingerprint"
+                  onClick={async () => {
+                    setError("");
+                    try {
+                      const ok = await verifyBiometric(admin.credentialId);
+                      if (ok) {
+                        login(admin.pin);
+                        setPin("");
+                        if (onClose) onClose();
+                      } else {
+                        setError("Fingerprint not recognized");
+                      }
+                    } catch (e) {
+                      setError(e.message || "Biometric error");
+                    }
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  Unlock with Fingerprint
+                </button>
+              );
+            })()}
+
+            {role === "admin" && bioAvailable && employees.find(e => e.role === "admin" && e.fingerprintEnabled && e.credentialId) && (
+              <div style={{ textAlign: "center", fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: 10 }}>or enter PIN</div>
+            )}
+
             <div className="emp-pin-display">
               {[0, 1, 2, 3].map((i) => (
                 <span key={i} className={`emp-pin-dot ${pin[i] ? "filled" : ""}`} />
               ))}
             </div>
             {error && <p className="emp-error">{error}</p>}
+
             <div className="emp-numpad">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "⌫"].map((n, i) => (
                 n === "" ? <div key={i} /> :
@@ -154,6 +202,22 @@ export default function EmployeeLogin({ onClose, required }) {
               ))}
             </div>
           </form>
+        ) : (
+          <div>
+            <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", textAlign: "center", marginBottom: 20 }}>Select login type</div>
+            <button className="emp-role-btn" onClick={() => setRole("admin")}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              Admin Login
+            </button>
+            <button className="emp-role-btn emp-role-btn-staff" onClick={() => setRole("staff")}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              Staff Login
+            </button>
+          </div>
         )}
       </div>
     </div>
