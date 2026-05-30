@@ -9,6 +9,15 @@ import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
 import EmployeeLogin from "./components/EmployeeLogin";
 
+const categories = [
+  { label: "All", icon: "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" },
+  { label: "Coffee", icon: "M18 8h1a4 4 0 0 1 0 8h-1 M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" },
+  { label: "Tea", icon: "M12 2v4M8 6h8M6 10h12M8 14h8M10 18h4M9 22h6" },
+  { label: "Pastries", icon: "M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" },
+  { label: "Sandwiches", icon: "M3 12h18M3 6h18M3 18h18" },
+  { label: "Specials", icon: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" },
+];
+
 function AppContent() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
@@ -50,8 +59,6 @@ function AppContent() {
       <Header
         search={search}
         onSearchChange={setSearch}
-        category={category}
-        onCategoryChange={setCategory}
         itemCount={itemCount}
         onAdminClick={adminOnly(() => setShowAdmin(true))}
         showAdmin={showAdmin}
@@ -78,6 +85,20 @@ function AppContent() {
               Products
             </h2>
             {products.length > 0 && <span className="product-count">{products.length} items</span>}
+          </div>
+          <div className="cat-strip">
+            {categories.map((cat) => (
+              <button
+                key={cat.label}
+                className={`cat-pill ${category === cat.label ? "active" : ""}`}
+                onClick={() => setCategory(cat.label)}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={cat.icon} />
+                </svg>
+                {cat.label}
+              </button>
+            ))}
           </div>
           <ProductList products={filtered} onAdd={handleAdd} />
         </main>
