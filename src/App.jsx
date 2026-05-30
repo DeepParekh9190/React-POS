@@ -25,6 +25,7 @@ function AppContent() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showEmployee, setShowEmployee] = useState(false);
+  const [showCart, setShowCart] = useState(false);
   const { addItem, itemCount } = useCart();
   const { products, getProduct } = useProducts();
   const { currentEmployee } = useEmployees();
@@ -60,6 +61,7 @@ function AppContent() {
         search={search}
         onSearchChange={setSearch}
         itemCount={itemCount}
+        onCartClick={() => setShowCart(true)}
         onAdminClick={adminOnly(() => setShowAdmin(true))}
         showAdmin={showAdmin}
         onCloseAdmin={() => setShowAdmin(false)}
@@ -104,6 +106,7 @@ function AppContent() {
         </main>
         <Cart />
       </div>
+      {showCart && <Cart overlay onClose={() => setShowCart(false)} />}
     </div>
   );
 }
