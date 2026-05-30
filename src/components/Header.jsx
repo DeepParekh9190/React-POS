@@ -36,12 +36,19 @@ export default function Header({
     };
   }, []);
 
+  const [showInstallHelp, setShowInstallHelp] = useState(false);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const result = await deferredPrompt.userChoice;
-    if (result.outcome === "accepted") setPwaInstalled(true);
-    setDeferredPrompt(null);
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const result = await deferredPrompt.userChoice;
+      if (result.outcome === "accepted") setPwaInstalled(true);
+      setDeferredPrompt(null);
+      setMenuOpen(false);
+    } else if (!pwaInstalled) {
+      setShowInstallHelp(true);
+    }
   };
 
   return (
@@ -223,6 +230,31 @@ export default function Header({
       {showDashboard && <Dashboard onClose={onCloseDashboard} />}
       {showSettings && <Settings onClose={onCloseSettings} />}
       {showEmployee && <EmployeeLogin onClose={onCloseEmployee} />}
+
+      {showInstallHelp && (
+        <div className="modal-overlay" onClick={() => setShowInstallHelp(false)}>
+          <div className="modal" style={{ maxWidth: "380px", textAlign: "center" }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ padding: "12px 0" }}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" strokeWidth="1.5" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <h3 style={{ margin: "12px 0 6px", fontSize: "1.1rem" }}>Install Pulse</h3>
+              {isIOS ? (
+                <div style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
+                  <p>Tap the <strong>Share</strong> button <span style={{ fontSize: "1.2rem" }}>⎙</span> in Safari, then scroll down and tap <strong>"Add to Home Screen"</strong>.</p>
+                </div>
+              ) : (
+                <div style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
+                  <p>Open this site in <strong>Chrome</strong>, tap the menu <strong>⋮</strong> and select <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</p>
+                </div>
+              )}
+              <button className="cart-pay" style={{ marginTop: 16 }} onClick={() => setShowInstallHelp(false)}>Got it</button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
