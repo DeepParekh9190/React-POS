@@ -4,10 +4,17 @@ import { ProductProvider, useProducts } from "./context/ProductContext";
 import { SettingsProvider } from "./context/SettingsContext";
 import { OrderProvider } from "./context/OrderContext";
 import { EmployeeProvider, useEmployees } from "./context/EmployeeContext";
+import { CustomerProvider } from "./context/CustomerContext";
+import { OfflineProvider } from "./context/OfflineContext";
 import Header from "./components/Header";
 import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
 import EmployeeLogin from "./components/EmployeeLogin";
+import CustomerManager from "./components/CustomerManager";
+import OrderHistory from "./components/OrderHistory";
+import QuickSellBar from "./components/QuickSellBar";
+import BarcodeScanner from "./components/BarcodeScanner";
+import BackupRestore from "./components/BackupRestore";
 
 const categories = [
   { label: "All", icon: "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" },
@@ -26,6 +33,11 @@ function AppContent() {
   const [showSettings, setShowSettings] = useState(false);
   const [showEmployee, setShowEmployee] = useState(false);
   const [showCart, setShowCart] = useState(false);
+  const [showCustomer, setShowCustomer] = useState(false);
+  const [showOrderHistory, setShowOrderHistory] = useState(false);
+  const [showQuickSell, setShowQuickSell] = useState(false);
+  const [showBarcode, setShowBarcode] = useState(false);
+  const [showBackup, setShowBackup] = useState(false);
   const { addItem, itemCount } = useCart();
   const { products, getProduct } = useProducts();
   const { currentEmployee } = useEmployees();
@@ -62,6 +74,11 @@ function AppContent() {
         onSearchChange={setSearch}
         itemCount={itemCount}
         onCartClick={() => setShowCart(true)}
+        onCustomerClick={() => setShowCustomer(true)}
+        onOrderHistoryClick={() => setShowOrderHistory(true)}
+        onQuickSellClick={() => setShowQuickSell(true)}
+        onBarcodeClick={() => setShowBarcode(true)}
+        onBackupClick={() => setShowBackup(true)}
         onAdminClick={adminOnly(() => setShowAdmin(true))}
         showAdmin={showAdmin}
         onCloseAdmin={() => setShowAdmin(false)}
@@ -107,6 +124,11 @@ function AppContent() {
         <Cart />
       </div>
       {showCart && <Cart overlay onClose={() => setShowCart(false)} />}
+      {showCustomer && <CustomerManager onClose={() => setShowCustomer(false)} />}
+      {showOrderHistory && <OrderHistory onClose={() => setShowOrderHistory(false)} />}
+      {showQuickSell && <QuickSellBar onClose={() => setShowQuickSell(false)} />}
+      {showBarcode && <BarcodeScanner onSelect={(product) => addItem(product)} onClose={() => setShowBarcode(false)} />}
+      {showBackup && <BackupRestore onClose={() => setShowBackup(false)} />}
     </div>
   );
 }
@@ -115,13 +137,17 @@ export default function App() {
   return (
     <SettingsProvider>
       <EmployeeProvider>
-        <CartProvider>
-          <ProductProvider>
-            <OrderProvider>
-              <AppContent />
-            </OrderProvider>
-          </ProductProvider>
-        </CartProvider>
+        <OrderProvider>
+          <CustomerProvider>
+            <CartProvider>
+              <ProductProvider>
+                <OfflineProvider>
+                  <AppContent />
+                </OfflineProvider>
+              </ProductProvider>
+            </CartProvider>
+          </CustomerProvider>
+        </OrderProvider>
       </EmployeeProvider>
     </SettingsProvider>
   );

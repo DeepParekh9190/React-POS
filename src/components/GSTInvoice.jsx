@@ -104,12 +104,12 @@ export default function GSTInvoice({ order, onClose }) {
               <tr>
                 <th>#</th>
                 <th>Item</th>
-                <th>HSN</th>
+                <th className="inv-hide-mobile">HSN</th>
                 <th>Qty</th>
                 <th>Rate</th>
                 <th>Taxable</th>
-                <th>SGST</th>
-                <th>CGST</th>
+                <th className="inv-hide-mobile">SGST</th>
+                <th className="inv-hide-mobile">CGST</th>
                 <th>Total</th>
               </tr>
             </thead>
@@ -124,12 +124,12 @@ export default function GSTInvoice({ order, onClose }) {
                   <tr key={i}>
                     <td>{i + 1}</td>
                     <td>{item.name}</td>
-                    <td className="inv-hsn">{item.hsn || settings.hsnDefault || "-"}</td>
+                    <td className="inv-hsn inv-hide-mobile">{item.hsn || settings.hsnDefault || "-"}</td>
                     <td className="inv-center">{item.quantity}</td>
                     <td className="inv-right">₹{item.price.toFixed(2)}</td>
                     <td className="inv-right">₹{taxable.toFixed(2)}</td>
-                    <td className="inv-right">₹{itemSgst.toFixed(2)}</td>
-                    <td className="inv-right">₹{itemCgst.toFixed(2)}</td>
+                    <td className="inv-right inv-hide-mobile">₹{itemSgst.toFixed(2)}</td>
+                    <td className="inv-right inv-hide-mobile">₹{itemCgst.toFixed(2)}</td>
                     <td className="inv-right">₹{(taxable + itemSgst + itemCgst).toFixed(2)}</td>
                   </tr>
                 );

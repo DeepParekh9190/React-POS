@@ -298,3 +298,19 @@
 .dash-btn-clear:hover {
   background: rgba(225, 112, 85, 0.2);
 }
+
+@media (max-width: 768px) {
+  .dash-overlay { padding: 16px 12px; align-items: flex-start; }
+  .dash-panel { padding: 20px 14px; }
+  .dash-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .dash-card { padding: 12px; }
+  .dash-card-value { font-size: 1.1rem; }
+  .dash-order-top { flex-wrap: wrap; gap: 4px; }
+  .dash-order-id { width: 100%; }
+  .dash-due-actions { flex-wrap: wrap; }
+  .dash-due-actions .dash-btn { flex: 1; }
+  .dash-order-actions { flex-wrap: wrap; }
+  .dash-order-actions .dash-btn { flex: 1; min-width: 60px; }
+  .dash-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .dash-header-actions { width: 100%; justify-content: flex-end; }
+}

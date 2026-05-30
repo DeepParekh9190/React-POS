@@ -189,5 +189,14 @@ img {
   }
   .product-section {
     max-height: none;
+    padding: 12px 12px 80px;
   }
+  .product-header { margin-bottom: 10px; }
+}
+
+@media (max-width: 400px) {
+  .product-section { padding: 10px 8px 80px; }
+  .cat-strip { padding: 0 0 10px; gap: 4px; }
+  .cat-strip .cat-pill { padding: 5px 10px; font-size: 0.72rem; }
+  .cat-strip .cat-pill svg { width: 12px; height: 12px; }
 }

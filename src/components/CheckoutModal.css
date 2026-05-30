@@ -348,6 +348,20 @@
   margin-bottom: 8px;
 }
 
+@media (max-width: 768px) {
+  .modal { padding: 20px 14px; }
+  .modal-payment-options { flex-wrap: wrap; }
+  .modal-payment-btn { min-width: 80px; flex: 1 1 auto; }
+  .modal-customer-row { flex-direction: column; gap: 6px; }
+  .modal-customer-row .modal-input { width: 100%; }
+  .modal-input-sm { max-width: 100%; }
+  .modal-type-options { flex-wrap: wrap; }
+  .modal-type-btn { flex: 1 1 auto; min-width: 80px; }
+  .modal-split-row { flex-wrap: wrap; }
+  .modal-split-row .modal-input { flex: 1 1 100%; }
+  .modal-split-row .modal-input-method { max-width: 100%; }
+}
+
 .modal-input-full {
   width: 100%;
   margin-top: 6px;

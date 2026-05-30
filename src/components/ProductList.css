@@ -25,3 +25,10 @@
     gap: 10px;
   }
 }
+
+@media (max-width: 400px) {
+  .pl-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+}

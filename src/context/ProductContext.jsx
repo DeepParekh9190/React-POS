@@ -12,6 +12,7 @@ function enrich(products) {
     ...p,
     stock: p.stock ?? 999,
     hsn: p.hsn ?? "",
+    cost_price: p.cost_price ?? 0,
   }));
 }
 
@@ -46,7 +47,16 @@ export function ProductProvider({ children }) {
   const addProduct = useCallback((product) => {
     setProducts((prev) => {
       const maxId = prev.reduce((max, p) => Math.max(max, p.id), 0);
-      return [...prev, { ...product, id: maxId + 1, stock: product.stock ?? 999, hsn: product.hsn ?? "" }];
+      return [...prev, { ...product, id: maxId + 1, stock: product.stock ?? 999, hsn: product.hsn ?? "", cost_price: product.cost_price ?? 0 }];
+    });
+  }, []);
+
+  const duplicateProduct = useCallback((id) => {
+    setProducts((prev) => {
+      const original = prev.find((p) => p.id === id);
+      if (!original) return prev;
+      const maxId = prev.reduce((max, p) => Math.max(max, p.id), 0);
+      return [...prev, { ...original, id: maxId + 1, name: original.name + " (copy)" }];
     });
   }, []);
 
@@ -68,13 +78,21 @@ export function ProductProvider({ children }) {
     );
   }, []);
 
+  const incrementStock = useCallback((id, qty) => {
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.id === id ? { ...p, stock: (p.stock === undefined ? 999 : p.stock) + qty } : p
+      )
+    );
+  }, []);
+
   const resetProducts = useCallback(() => {
     setProducts(enrich(defaultProducts));
   }, []);
 
   return (
     <ProductContext.Provider
-      value={{ products, getProduct, addProduct, updateProduct, deleteProduct, decrementStock, resetProducts, lowStockThreshold }}
+      value={{ products, getProduct, addProduct, updateProduct, deleteProduct, duplicateProduct, decrementStock, incrementStock, resetProducts, lowStockThreshold }}
     >
       {children}
     </ProductContext.Provider>

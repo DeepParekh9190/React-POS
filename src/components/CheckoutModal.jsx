@@ -29,6 +29,7 @@ export default function CheckoutModal({ onClose }) {
   const [dueDate, setDueDate] = useState("");
   const [buyerGst, setBuyerGst] = useState("");
   const [splitPayments, setSplitPayments] = useState([{ method: "cash", amount: "" }]);
+  const [tipPercent, setTipPercent] = useState(0);
   const [completedOrder, setCompletedOrder] = useState(null);
 
   useEffect(() => {
@@ -39,7 +40,8 @@ export default function CheckoutModal({ onClose }) {
   const taxRate = settings.taxRate || 0;
   const taxable = subtotal - totalDiscount;
   const tax = taxable * (taxRate / 100);
-  const total = taxable + tax;
+  const tip = (taxable + tax) * (tipPercent / 100);
+  const total = taxable + tax + tip;
 
   const handleSplitChange = (index, field, value) => {
     const updated = [...splitPayments];
@@ -83,6 +85,7 @@ export default function CheckoutModal({ onClose }) {
       sgstAmt: tax / 2,
       cgstAmt: tax / 2,
       total,
+      tip: { percent: tipPercent, amount: tip },
       paymentMethod: finalPayment,
       paymentType,
       dueDate: paymentType === "credit" ? new Date(dueDate).getTime() : null,
@@ -144,6 +147,17 @@ export default function CheckoutModal({ onClose }) {
           <div className="modal-total-row modal-total-final"><span>Total</span><span>₹{total.toFixed(2)}</span></div>
         </div>
 
+        <div className="modal-payment" style={{ marginBottom: 12 }}>
+          <span className="modal-section-label">Tip</span>
+          <div className="modal-payment-options" style={{ gap: 4 }}>
+            {[0, 5, 10, 15].map((pct) => (
+              <button key={pct} className={`modal-payment-btn ${tipPercent === pct ? "active" : ""}`} onClick={() => setTipPercent(tipPercent === pct ? 0 : pct)}>
+                {pct === 0 ? "No Tip" : `${pct}%`}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="modal-payment-type">
           <span className="modal-section-label">Payment Type</span>
           <div className="modal-type-options">
@@ -200,10 +214,10 @@ export default function CheckoutModal({ onClose }) {
         )}
 
         <div className="modal-customer">
-          <span className="modal-section-label">{paymentType === "credit" ? "Customer (required)" : "Customer (optional)"}</span>
+          <span className="modal-section-label">Customer (required)</span>
           <div className="modal-customer-row">
-            <input className="modal-input" placeholder="Name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} required={paymentType === "credit"} />
-            <input className="modal-input" placeholder="Phone" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} />
+            <input className="modal-input" placeholder="Name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} required />
+            <input className="modal-input" placeholder="Phone" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} required />
             <input className="modal-input modal-input-sm" placeholder="Table #" value={tableNumber} onChange={(e) => setTableNumber(e.target.value)} />
           </div>
           <input className="modal-input modal-input-full" placeholder="Buyer GSTIN (optional)" value={buyerGst} onChange={(e) => setBuyerGst(e.target.value)} />
@@ -214,7 +228,7 @@ export default function CheckoutModal({ onClose }) {
         <div className="modal-actions">
           <button className="modal-btn modal-btn-secondary" onClick={onClose}>Cancel</button>
           <button className="modal-btn modal-btn-primary" onClick={handleConfirm}
-            disabled={paymentType === "credit" && !customerName.trim()}
+            disabled={!customerName.trim() || !customerPhone.trim()}
           >
             {paymentType === "credit" ? "Create Due" : paymentType === "split" ? `Pay ₹${total.toFixed(2)}` : `Pay ₹${total.toFixed(2)}`}
           </button>

@@ -82,6 +82,7 @@
   border-radius: var(--radius-md);
   padding: 24px;
   font-size: 0.8rem;
+  overflow-x: auto;
 }
 
 .inv-store {
@@ -141,6 +142,7 @@
 .inv-totals {
   margin-left: auto;
   width: 280px;
+  max-width: 100%;
 }
 
 .inv-total-row {
@@ -181,3 +183,15 @@
 
 .inv-credit-note strong { color: var(--warning); }
 .inv-paid { color: var(--success); margin-left: 8px; }
+
+@media (max-width: 768px) {
+  .gst-modal { padding: 16px 12px; }
+  .inv-preview { padding: 14px 10px; font-size: 0.7rem; }
+  .inv-table { font-size: 0.6rem; }
+  .inv-table th, .inv-table td { padding: 3px 2px; }
+  .inv-table .inv-hide-mobile { display: none; }
+  .inv-totals { width: 100%; }
+  .inv-store { font-size: 1rem; }
+  .inv-meta { flex-direction: column; gap: 2px; }
+  .inv-buyer { flex-direction: column; gap: 2px; }
+}

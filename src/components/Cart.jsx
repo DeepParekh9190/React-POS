@@ -19,13 +19,16 @@ export default function Cart({ overlay, onClose }) {
   const [step, setStep] = useState("cart");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [tableNumber, setTableNumber] = useState("");
+  const [tipPercent, setTipPercent] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [completedOrder, setCompletedOrder] = useState(null);
 
   const taxRate = settings.taxRate || 0;
   const taxable = subtotal - totalDiscount;
   const tax = taxable * (taxRate / 100);
-  const total = taxable + tax;
+  const tip = (taxable + tax) * (tipPercent / 100);
+  const total = taxable + tax + tip;
 
   const handlePayment = () => {
     const order = {
@@ -39,11 +42,12 @@ export default function Cart({ overlay, onClose }) {
       subtotal, totalDiscount, tax, taxRate,
       sgstRate: settings.sgst || 0, cgstRate: settings.cgst || 0,
       sgstAmt: tax / 2, cgstAmt: tax / 2,
-      total,
+      total, tip: { percent: tipPercent, amount: tip },
       paymentMethod: { method: paymentMethod, amount: total },
       paymentType: "full",
       customerName: customerName.trim(),
       customerPhone: customerPhone.trim(),
+      tableNumber: tableNumber.trim(),
       employeeId: currentEmployee?.id || null,
       employeeName: currentEmployee?.name || null,
     };
@@ -137,10 +141,22 @@ export default function Cart({ overlay, onClose }) {
 
       <div className="cart-body">
         <div className="payment-section">
-          <span className="payment-label">Customer</span>
+          <span className="payment-label">Customer (required)</span>
           <div className="payment-customer-row">
             <input className="payment-input" placeholder="Customer Name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
             <input className="payment-input" placeholder="Phone Number" type="tel" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} />
+          </div>
+          <input className="payment-input" style={{ marginTop: 6, width: "100%", boxSizing: "border-box" }} placeholder="Table # (optional)" value={tableNumber} onChange={(e) => setTableNumber(e.target.value)} />
+        </div>
+
+        <div className="payment-section">
+          <span className="payment-label">Tip</span>
+          <div className="payment-options" style={{ gap: 4 }}>
+            {[0, 5, 10, 15].map((pct) => (
+              <button key={pct} className={`payment-option-btn ${tipPercent === pct ? "active" : ""}`} onClick={() => setTipPercent(tipPercent === pct ? 0 : pct)} style={{ flexDirection: "row", justifyContent: "center", padding: "10px 8px" }}>
+                {pct === 0 ? "No Tip" : `${pct}%`}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -167,11 +183,19 @@ export default function Cart({ overlay, onClose }) {
 
       <div className="cart-foot">
         <div className="cart-summary">
+          <div className="cs-row"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
+          {totalDiscount > 0 && <div className="cs-row cs-disc"><span>Discount</span><span>-₹{totalDiscount.toFixed(2)}</span></div>}
+          <div className="cs-row"><span>Tax</span><span>₹{tax.toFixed(2)}</span></div>
+          {tip > 0 && <div className="cs-row"><span>Tip ({tipPercent}%)</span><span>₹{tip.toFixed(2)}</span></div>}
           <div className="cs-row cs-total"><span>Total</span><span>₹{total.toFixed(2)}</span></div>
         </div>
         <div className="payment-actions">
-          <button className="cart-back" onClick={() => setStep("cart")}>Back</button>
-          <button className="cart-pay" onClick={handlePayment}>Pay ₹{total.toFixed(2)}</button>
+          <button className="cart-back" onClick={() => setStep("cart")}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button className="cart-pay" disabled={!customerName.trim() || !customerPhone.trim()} onClick={handlePayment}>Pay ₹{total.toFixed(2)}</button>
         </div>
       </div>
     </>

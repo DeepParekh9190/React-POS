@@ -164,3 +164,38 @@
   background: var(--bg-card-hover);
   color: var(--text-primary);
 }
+
+@media (max-width: 768px) {
+  .receipt-modal { 
+    padding: 20px 16px; 
+    max-height: 90vh; 
+    overflow-y: auto; 
+  }
+  .receipt-content { 
+    padding: 16px; 
+    font-size: 0.95rem;
+  }
+  .receipt-store strong {
+    font-size: 1.1rem;
+  }
+  .receipt-store span,
+  .receipt-customer,
+  .receipt-line,
+  .receipt-payment {
+    font-size: 0.85rem;
+  }
+  .receipt-row {
+    font-size: 0.9rem;
+  }
+  .receipt-row-total {
+    font-size: 1.05rem;
+  }
+  .receipt-actions { 
+    flex-direction: row; 
+    gap: 8px; 
+  }
+  .receipt-btn { 
+    height: 48px; 
+    font-size: 0.95rem; 
+  }
+}

@@ -189,13 +189,34 @@
 }
 
 .emp-add-row {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.emp-add-row .emp-input {
+  grid-column: span 2;
+  width: 100%;
+}
+
+.emp-add-row .emp-input.emp-input-sm {
+  grid-column: span 1;
+  max-width: 100%;
+}
+
+.emp-add-row .emp-role-select {
+  grid-column: span 1;
+  width: 100%;
+}
+
+.emp-add-row .emp-btn-add {
+  grid-column: span 2;
+  width: 100%;
+  justify-content: center;
 }
 
 .emp-input {
-  flex: 1;
   height: 38px;
   padding: 0 10px;
   border-radius: var(--radius-sm);
@@ -203,11 +224,10 @@
   border: 1px solid var(--glass-border);
   color: var(--text-primary);
   font-size: 0.82rem;
+  min-width: 0;
 }
 
 .emp-input:focus { border-color: var(--accent-1); box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15); }
-
-.emp-input-sm { max-width: 70px; }
 
 .emp-role-select {
   height: 38px;
@@ -222,6 +242,11 @@
 
 .emp-role-select:focus {
   border-color: var(--accent-1);
+}
+
+.emp-role-select option {
+  background: var(--bg-secondary, #1e1e2d);
+  color: var(--text-primary, #ffffff);
 }
 
 .emp-list { display: flex; flex-direction: column; gap: 4px; }
@@ -257,3 +282,48 @@
 }
 
 .emp-list-del:hover { background: rgba(225, 112, 85, 0.15); color: var(--danger); }
+
+@media (max-width: 768px) {
+  .emp-panel { 
+    padding: 20px 16px; 
+    max-height: 90vh; 
+    overflow-y: auto; 
+  }
+  .emp-add-row { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 8px; 
+  }
+  .emp-add-row .emp-input { 
+    grid-column: span 2; 
+    width: 100%; 
+  }
+  .emp-add-row .emp-input.emp-input-sm { 
+    grid-column: span 1; 
+    max-width: 100%; 
+  }
+  .emp-add-row .emp-role-select { 
+    grid-column: span 1; 
+    width: 100%; 
+  }
+  .emp-add-row .emp-btn-add { 
+    grid-column: span 2; 
+    width: 100%; 
+    justify-content: center; 
+  }
+  .emp-num-btn { 
+    height: 48px; 
+    font-size: 1.2rem; 
+  }
+  .emp-list-item { 
+    flex-wrap: nowrap; 
+    gap: 8px; 
+  }
+  .emp-list-item span:first-child { 
+    width: auto; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+  }
+}
+

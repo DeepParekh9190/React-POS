@@ -1,0 +1,504 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  max-width: 460px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  animation: slideUp 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.modal-wide { max-width: 560px; }
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.modal-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.modal-close:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 0;
+}
+
+/* Barcode Scanner */
+
+.barcode-camera-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 28px;
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  border: 1px dashed var(--glass-border);
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  transition: all 0.2s;
+}
+
+.barcode-camera-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  border-color: var(--accent-1);
+}
+
+.barcode-video-wrapper {
+  position: relative;
+  margin-bottom: 14px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.barcode-video {
+  width: 100%;
+  display: block;
+  border-radius: var(--radius-md);
+}
+
+.barcode-stop-btn {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.barcode-error {
+  color: var(--danger);
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.barcode-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+.barcode-input-wrap:focus-within {
+  border-color: var(--accent-1);
+}
+
+.barcode-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.barcode-input::placeholder { color: var(--text-muted); }
+
+.barcode-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.barcode-result-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  transition: all 0.2s;
+  width: 100%;
+  text-align: left;
+}
+
+.barcode-result-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-1);
+}
+
+.barcode-result-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.barcode-result-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.barcode-result-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.barcode-result-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.barcode-no-results {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 12px;
+}
+
+/* Customers */
+
+.customer-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.customer-stat {
+  padding: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.customer-stat span {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+/* Quick Sell */
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.quick-key-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  min-height: 80px;
+  transition: all 0.2s;
+}
+
+.quick-key-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-1);
+}
+
+.quick-key-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-key-product {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.quick-key-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.quick-key-name {
+  font-size: 0.65rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.quick-key-empty {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+/* Admin shared */
+
+.admin-form-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.admin-input {
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  min-width: 0;
+}
+
+.admin-input:focus {
+  border-color: var(--accent-1);
+  outline: none;
+}
+
+.admin-btn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.admin-btn-primary {
+  background: var(--accent-gradient);
+  color: #fff;
+  border: none;
+}
+
+.admin-btn-primary:hover {
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+
+.admin-btn-secondary {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+}
+
+.admin-btn-secondary:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.admin-btn-danger {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--danger);
+}
+
+.admin-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.admin-btn-danger-sm {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 0.72rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.admin-btn-danger-sm:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.admin-file-input {
+  display: none;
+}
+
+.admin-reset-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Order History */
+
+.dash-order-refunded {
+  opacity: 0.6;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* Dashboard extras */
+
+.dash-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 100px;
+  margin-bottom: 6px;
+}
+
+.dash-bar {
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+  background: var(--accent-gradient);
+  min-height: 4px;
+  transition: height 0.4s ease;
+  position: relative;
+}
+
+.dash-bar:hover {
+  opacity: 0.8;
+}
+
+.dash-bar-label {
+  text-align: center;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.dash-period-filter {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.dash-period-btn {
+  flex: 1;
+  height: 32px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.dash-period-btn:hover {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+}
+
+.dash-period-btn.active {
+  background: var(--accent-gradient);
+  border-color: transparent;
+  color: #fff;
+}
+
+.dash-profit-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.82rem;
+}
+
+.dash-profit-label { color: var(--text-muted); }
+.dash-profit-value { font-weight: 600; color: var(--success); }
+.dash-profit-loss { color: var(--danger); }
+
+.dash-peak-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+
+.dash-peak-cell {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .modal { padding: 20px 16px; }
+  .quick-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .quick-key-card { min-height: 64px; padding: 8px 4px; }
+  .dash-chart { height: 60px; }
+  .dash-peak-grid { grid-template-columns: repeat(6, 1fr); }
+  .customer-stats { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .quick-grid { grid-template-columns: repeat(3, 1fr); }
+  .quick-key-card { min-height: 56px; }
+  .quick-key-name { font-size: 0.6rem; }
+  .dash-peak-grid { grid-template-columns: repeat(4, 1fr); }
+  .barcode-camera-btn { padding: 20px 16px; }
+}

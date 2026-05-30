@@ -376,3 +376,16 @@
   gap: 10px;
   justify-content: center;
 }
+
+@media (max-width: 768px) {
+  .admin-panel { padding: 20px 14px; }
+  .admin-form-row { flex-wrap: wrap; }
+  .admin-form-row .admin-input { min-width: 100px; flex: 1 1 auto; }
+  .admin-input-sm { max-width: 80px; }
+  .admin-image-inputs { flex-wrap: wrap; }
+  .admin-image-actions { gap: 6px; }
+  .admin-btn { height: 40px; padding: 0 14px; font-size: 0.8rem; }
+  .admin-action-btn { width: 36px; height: 36px; }
+  .admin-item { gap: 8px; padding: 8px 10px; }
+  .admin-list-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
