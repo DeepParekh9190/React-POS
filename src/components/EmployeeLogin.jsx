@@ -1,15 +1,22 @@
 import { useState, useEffect } from "react";
 import { useEmployees } from "../context/EmployeeContext";
+import { isBiometricAvailable, registerBiometric } from "../utils/biometric";
 import "./EmployeeLogin.css";
 
 export default function EmployeeLogin({ onClose, required }) {
-  const { employees, currentEmployee, login, logout, addEmployee, deleteEmployee } = useEmployees();
+  const { employees, currentEmployee, login, logout, addEmployee, deleteEmployee, updateEmployee, setFingerprint } = useEmployees();
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [showManage, setShowManage] = useState(false);
   const [newName, setNewName] = useState("");
   const [newPin, setNewPin] = useState("");
   const [newRole, setNewRole] = useState("staff");
+  const [bioAvailable, setBioAvailable] = useState(false);
+  const [bioLoading, setBioLoading] = useState(false);
+
+  useEffect(() => {
+    isBiometricAvailable().then(setBioAvailable);
+  }, []);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -71,6 +78,27 @@ export default function EmployeeLogin({ onClose, required }) {
             <span className="emp-role">{currentEmployee.role}</span>
             <button className="emp-btn emp-btn-logout" onClick={handleLogout}>Logout</button>
 
+            {currentEmployee.role === "admin" && bioAvailable && (
+              <button className="emp-btn emp-btn-manage" onClick={async () => {
+                if (currentEmployee.fingerprintEnabled) {
+                  setFingerprint(currentEmployee.id, null);
+                } else {
+                  setBioLoading(true);
+                  try {
+                    const cred = await registerBiometric(currentEmployee.id);
+                    setFingerprint(currentEmployee.id, cred.credentialId);
+                  } catch (e) {
+                    alert("Fingerprint enrollment failed: " + (e.message || ""));
+                  }
+                  setBioLoading(false);
+                }
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                {bioLoading ? "Enrolling..." : currentEmployee.fingerprintEnabled ? "Disable Fingerprint" : "Enable Fingerprint Lock"}
+              </button>
+            )}
             {currentEmployee.role === "admin" && (
               <button className="emp-btn emp-btn-manage" onClick={() => setShowManage(!showManage)}>
                 {showManage ? "Hide" : "Manage Staff"}

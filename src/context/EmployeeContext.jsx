@@ -5,7 +5,7 @@ const STORAGE_KEY = "novapos_employees";
 const CURRENT_KEY = "novapos_current_employee";
 
 const defaultEmployees = [
-  { id: "emp1", name: "Admin", pin: "1234", role: "admin" },
+  { id: "emp1", name: "Admin", pin: "1234", role: "admin", fingerprintEnabled: false, credentialId: null },
 ];
 
 function loadEmployees() {
@@ -41,7 +41,7 @@ export function EmployeeProvider({ children }) {
   }, [currentEmployee]);
 
   const addEmployee = useCallback((emp) => {
-    setEmployees((prev) => [...prev, { ...emp, id: "emp" + Date.now() }]);
+    setEmployees((prev) => [...prev, { ...emp, id: "emp" + Date.now(), fingerprintEnabled: false, credentialId: null }]);
   }, []);
 
   const updateEmployee = useCallback((id, updates) => {
@@ -53,6 +53,15 @@ export function EmployeeProvider({ children }) {
   const deleteEmployee = useCallback((id) => {
     setEmployees((prev) => prev.filter((e) => e.id !== id));
     setCurrentEmployee((prev) => (prev?.id === id ? null : prev));
+  }, []);
+
+  const setFingerprint = useCallback((id, credentialId) => {
+    setEmployees((prev) =>
+      prev.map((e) => e.id === id ? { ...e, fingerprintEnabled: !!credentialId, credentialId: credentialId || null } : e)
+    );
+    setCurrentEmployee((prev) =>
+      prev?.id === id ? { ...prev, fingerprintEnabled: !!credentialId, credentialId: credentialId || null } : prev
+    );
   }, []);
 
   const login = useCallback((pin) => {
@@ -70,7 +79,7 @@ export function EmployeeProvider({ children }) {
 
   return (
     <EmployeeContext.Provider
-      value={{ employees, currentEmployee, addEmployee, updateEmployee, deleteEmployee, login, logout }}
+      value={{ employees, currentEmployee, addEmployee, updateEmployee, deleteEmployee, login, logout, setFingerprint }}
     >
       {children}
     </EmployeeContext.Provider>
